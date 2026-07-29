@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MessMate — UX Case Study</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Inter:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg: #1B2B1E;
+    --bg-panel: #22331F;
+    --paper: #F2EFE4;
+    --turmeric: #E8A33D;
+    --brick: #C1502E;
+    --sage: #7C9473;
+    --line: rgba(242,239,228,0.14);
+    --font-display: 'Fraunces', serif;
+    --font-body: 'Inter', sans-serif;
+    --font-mono: 'IBM Plex Mono', monospace;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--paper);
+    font-family:var(--font-body);
+    line-height:1.6;
+  }
+  a{color:var(--turmeric);}
+
+  /* Thali nav */
+  .thali-nav{
+    position:fixed;
+    left:24px;
+    top:50%;
+    transform:translateY(-50%);
+    display:flex;
+    flex-direction:column;
+    gap:18px;
+    z-index:50;
+  }
+  .thali-nav button{
+    width:14px;height:14px;
+    border-radius:50%;
+    border:1.5px solid var(--sage);
+    background:transparent;
+    cursor:pointer;
+    padding:0;
+    transition:all .25s ease;
+  }
+  .thali-nav button.active{
+    background:var(--turmeric);
+    border-color:var(--turmeric);
+    transform:scale(1.3);
+  }
+  @media (max-width:800px){ .thali-nav{display:none;} }
+
+  section{
+    max-width:760px;
+    margin:0 auto;
+    padding:120px 32px;
+    border-bottom:1px solid var(--line);
+  }
+  section:last-of-type{border-bottom:none;}
+
+  .eyebrow{
+    font-family:var(--font-mono);
+    font-size:12px;
+    letter-spacing:.14em;
+    text-transform:uppercase;
+    color:var(--sage);
+    margin-bottom:14px;
+  }
+  h1{
+    font-family:var(--font-display);
+    font-weight:700;
+    font-size:clamp(42px,7vw,84px);
+    line-height:1.02;
+    margin:0 0 20px;
+  }
+  h2{
+    font-family:var(--font-display);
+    font-weight:600;
+    font-size:clamp(28px,4vw,40px);
+    margin:0 0 24px;
+  }
+  p{ color:rgba(242,239,228,0.85); font-size:17px; max-width:60ch;}
+  .lede{ font-size:20px; color:var(--paper); }
+
+  /* Hero */
+  .hero{
+    min-height:100vh;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    padding-top:80px;
+    padding-bottom:80px;
+  }
+  .hero .meta{
+    display:flex;
+    gap:28px;
+    font-family:var(--font-mono);
+    font-size:13px;
+    color:var(--sage);
+    margin-top:32px;
+    flex-wrap:wrap;
+  }
+  .hero .meta span b{color:var(--paper);}
+
+  /* Insight cards */
+  .insights{
+    display:grid;
+    gap:16px;
+    margin-top:32px;
+  }
+  .insight{
+    background:var(--bg-panel);
+    border:1px solid var(--line);
+    border-radius:4px;
+    padding:22px 24px;
+  }
+  .insight .tag{
+    font-family:var(--font-mono);
+    font-size:12px;
+    color:var(--brick);
+    margin-bottom:8px;
+  }
+  .insight p{margin:0;font-size:16px;}
+
+  /* Wireframe boxes */
+  .wireframe{
+    background:var(--bg-panel);
+    border:1px dashed var(--sage);
+    border-radius:6px;
+    padding:20px;
+    margin-top:32px;
+    font-family:var(--font-mono);
+    font-size:13px;
+    color:var(--sage);
+  }
+  .wire-row{display:flex; gap:12px; margin-bottom:12px;}
+  .wire-box{
+    border:1px solid var(--sage);
+    border-radius:4px;
+    padding:14px;
+    flex:1;
+    text-align:center;
+  }
+  .wire-box.tall{height:90px; display:flex; align-items:center; justify-content:center;}
+
+  /* Flow diagram */
+  .flow{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    margin-top:32px;
+    flex-wrap:wrap;
+  }
+  .flow-step{
+    font-family:var(--font-mono);
+    font-size:13px;
+    border:1px solid var(--turmeric);
+    color:var(--turmeric);
+    border-radius:20px;
+    padding:8px 16px;
+    white-space:nowrap;
+  }
+  .flow-arrow{color:var(--sage); font-size:18px;}
+
+  /* Live demo — the actual UI */
+  .demo-shell{
+    margin-top:36px;
+    background:var(--paper);
+    color:#1B2B1E;
+    border-radius:14px;
+    overflow:hidden;
+    box-shadow:0 30px 60px rgba(0,0,0,0.35);
+  }
+  .demo-bar{
+    background:#1B2B1E;
+    color:var(--paper);
+    padding:12px 18px;
+    font-family:var(--font-mono);
+    font-size:12px;
+    display:flex;
+    justify-content:space-between;
+  }
+  .demo-body{ padding:22px; }
+  .demo-title{
+    font-family:var(--font-display);
+    font-weight:600;
+    font-size:22px;
+    margin:0 0 4px;
+  }
+  .demo-sub{ font-size:13px; color:#5B6B57; margin-bottom:18px;}
+  .menu-item{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:14px 0;
+    border-bottom:1px solid rgba(27,43,30,0.1);
+  }
+  .menu-item:last-child{border-bottom:none;}
+  .menu-info b{display:block; font-size:15px;}
+  .menu-info span{font-size:13px; color:#5B6B57;}
+  .qty{
+    display:flex;
+    align-items:center;
+    gap:10px;
+  }
+  .qty button{
+    width:28px;height:28px;
+    border-radius:50%;
+    border:1px solid #1B2B1E;
+    background:transparent;
+    font-size:16px;
+    cursor:pointer;
+    color:#1B2B1E;
+  }
+  .qty button:focus-visible, .thali-nav button:focus-visible, .cart-cta:focus-visible{
+    outline:2px solid var(--brick);
+    outline-offset:2px;
+  }
+  .qty span{ min-width:16px; text-align:center; font-family:var(--font-mono);}
+  .cart-summary{
+    margin-top:18px;
+    padding-top:18px;
+    border-top:2px solid #1B2B1E;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+  }
+  .cart-total{font-family:var(--font-mono); font-size:18px; font-weight:600;}
+  .cart-cta{
+    background:var(--brick);
+    color:var(--paper);
+    border:none;
+    border-radius:8px;
+    padding:12px 22px;
+    font-family:var(--font-body);
+    font-weight:600;
+    font-size:14px;
+    cursor:pointer;
+  }
+  .cart-cta:hover{ background:#a5432a; }
+  .toast{
+    margin-top:12px;
+    font-family:var(--font-mono);
+    font-size:12px;
+    color:var(--sage);
+    min-height:16px;
+  }
+
+  footer{
+    max-width:760px;
+    margin:0 auto;
+    padding:80px 32px 120px;
+    text-align:left;
+  }
+  footer .eyebrow{margin-bottom:6px;}
+
+  @media (prefers-reduced-motion: reduce){
+    html{scroll-behavior:auto;}
+    *{transition:none !important;}
+  }
+</style>
+</head>
+<body>
+
+<nav class="thali-nav" aria-label="Section navigation">
+  <button data-target="#hero" class="active" aria-label="Intro"></button>
+  <button data-target="#problem" aria-label="Problem"></button>
+  <button data-target="#research" aria-label="Research"></button>
+  <button data-target="#wireframes" aria-label="Wireframes"></button>
+  <button data-target="#prototype" aria-label="Prototype"></button>
+  <button data-target="#ui" aria-label="Final UI"></button>
+  <button data-target="#reflection" aria-label="Reflection"></button>
+</nav>
+
+<section id="hero" class="hero">
+  <div class="eyebrow">UX Case Study — Food Ordering</div>
+  <h1>MessMate</h1>
+  <p class="lede">Redesigning how mess-hall regulars in a college town pre-order meals, so the line at the counter disappears and the kitchen stops guessing portions.</p>
+  <div class="meta">
+    <span>Role — <b>UX &amp; UI Design</b></span>
+    <span>Timeline — <b>3 weeks</b></span>
+    <span>Tools — <b>Figma, user interviews, HTML/CSS/JS prototype</b></span>
+  </div>
+</section>
+
+<section id="problem">
+  <div class="eyebrow">01 — The Problem</div>
+  <h2>Everyone orders the same lunch, at the same window, at the same minute.</h2>
+  <p>Mess halls near college campuses hit a hard crunch between 12:30 and 1:00 PM. Students queue for a menu they can't see until they reach the counter, the kitchen over-cooks "safe" items to avoid running out, and anyone with a short break skips lunch entirely rather than wait.</p>
+  <p>The brief: design a lightweight pre-ordering flow that removes the guesswork for both sides of the counter, without asking students to adopt a whole new habit.</p>
+</section>
+
+<section id="research">
+  <div class="eyebrow">02 — Research</div>
+  <h2>Three insights from talking to 11 students and 2 mess owners.</h2>
+  <div class="insights">
+    <div class="insight">
+      <div class="tag">INSIGHT 01</div>
+      <p>Students decide what to eat while still in class, not while standing in line — the ordering moment needs to happen 20–40 minutes before they arrive, not at the counter.</p>
+    </div>
+    <div class="insight">
+      <div class="tag">INSIGHT 02</div>
+      <p>Mess owners don't want a dashboard to learn — they wanted totals shouted out or printed, since the kitchen runs on paper tickets, not screens.</p>
+    </div>
+    <div class="insight">
+      <div class="tag">INSIGHT 03</div>
+      <p>Nobody wanted an account or a login. Every extra step before ordering was named, unprompted, as a reason people would just skip the app and queue as usual.</p>
+    </div>
+  </div>
+</section>
+
+<section id="wireframes">
+  <div class="eyebrow">03 — Wireframes</div>
+  <h2>Low-fidelity structure, before any visual design.</h2>
+  <p>Three screens, no login, no navigation bar — because there's nowhere else to go. The wireframe below is the actual skeleton, not a styled mock.</p>
+  <div class="wireframe">
+    <div class="wire-row">
+      <div class="wire-box tall">Today's Menu<br>(list, qty stepper)</div>
+      <div class="wire-box tall">Cart Summary<br>(total, pickup time)</div>
+      <div class="wire-box tall">Ticket Number<br>(confirmation)</div>
+    </div>
+    <div>[ single scroll → single tap to confirm → done ]</div>
+  </div>
+</section>
+
+<section id="prototype">
+  <div class="eyebrow">04 — Prototype Flow</div>
+  <h2>One path in, one path out.</h2>
+  <p>Every version cut a step. The final flow has no branching decisions — the only choice a student makes is quantity.</p>
+  <div class="flow">
+    <div class="flow-step">Open menu</div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-step">Adjust quantities</div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-step">Confirm order</div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-step">Get ticket #</div>
+    <div class="flow-arrow">→</div>
+    <div class="flow-step">Walk in, skip the line</div>
+  </div>
+</section>
+
+<section id="ui">
+  <div class="eyebrow">05 — Final UI (live)</div>
+  <h2>The interface, actually working.</h2>
+  <p>This isn't a screenshot — it's the real component. Adjust quantities and confirm to see the flow the wireframe above was built toward.</p>
+
+  <div class="demo-shell">
+    <div class="demo-bar"><span>MESSMATE</span><span>PICKUP · 1:10 PM</span></div>
+    <div class="demo-body">
+      <p class="demo-title">Today's Menu</p>
+      <p class="demo-sub">Thursday, 30 July — Ram Nagar Mess</p>
+
+      <div id="menu-list"></div>
+
+      <div class="cart-summary">
+        <div class="cart-total">Total: ₹<span id="cart-total">0</span></div>
+        <button class="cart-cta" id="confirm-btn">Confirm order</button>
+      </div>
+      <div class="toast" id="toast" role="status" aria-live="polite"></div>
+    </div>
+  </div>
+</section>
+
+<section id="reflection">
+  <div class="eyebrow">06 — Reflection</div>
+  <h2>What I'd test next.</h2>
+  <p>The prototype assumes students trust a printed ticket number enough to skip the line — that's untested at scale. Next iteration: run it for one real lunch service with a paper sign, measure how many people actually walk past the queue, and interview the two who don't.</p>
+</section>
+
+<footer>
+  <div class="eyebrow">Get in touch</div>
+  <p>Built as a portfolio piece to show end-to-end thinking — research through working code.<br>
+  <a href="mailto:you@example.com">you@example.com</a> · <a href="https://github.com/yourusername" target="_blank" rel="noopener">github.com/yourusername</a></p>
+</footer>
+
+<script>
+  // ---- Thali nav active-state on scroll ----
+  const navButtons = document.querySelectorAll('.thali-nav button');
+  const sections = [...navButtons].map(b => document.querySelector(b.dataset.target));
+
+  navButtons.forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelector(btn.dataset.target).scrollIntoView({behavior:'smooth'});
+    });
+  });
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if(entry.isIntersecting){
+        const idx = sections.indexOf(entry.target);
+        navButtons.forEach(b => b.classList.remove('active'));
+        if(idx > -1) navButtons[idx].classList.add('active');
+      }
+    });
+  }, { threshold: 0.5 });
+
+  sections.forEach(s => s && observer.observe(s));
+
+  // ---- Live menu / cart demo ----
+  const menu = [
+    { id:'meals', name:'Meals (rice, sambar, 2 curry)', price:60, qty:0 },
+    { id:'curd-rice', name:'Curd Rice', price:35, qty:0 },
+    { id:'chapati', name:'Chapati (2 pcs) + kurma', price:45, qty:0 },
+    { id:'filter-coffee', name:'Filter Coffee', price:15, qty:0 },
+  ];
+
+  const listEl = document.getElementById('menu-list');
+  const totalEl = document.getElementById('cart-total');
+  const toastEl = document.getElementById('toast');
+  const confirmBtn = document.getElementById('confirm-btn');
+
+  function render(){
+    listEl.innerHTML = menu.map(item => `
+      <div class="menu-item">
+        <div class="menu-info">
+          <b>${item.name}</b>
+          <span>₹${item.price}</span>
+        </div>
+        <div class="qty">
+          <button aria-label="Decrease ${item.name}" data-id="${item.id}" data-action="dec">−</button>
+          <span>${item.qty}</span>
+          <button aria-label="Increase ${item.name}" data-id="${item.id}" data-action="inc">+</button>
+        </div>
+      </div>
+    `).join('');
+    const total = menu.reduce((sum, i) => sum + i.qty * i.price, 0);
+    totalEl.textContent = total;
+  }
+
+  listEl.addEventListener('click', (e) => {
+    const btn = e.target.closest('button');
+    if(!btn) return;
+    const item = menu.find(i => i.id === btn.dataset.id);
+    if(!item) return;
+    if(btn.dataset.action === 'inc') item.qty++;
+    if(btn.dataset.action === 'dec') item.qty = Math.max(0, item.qty - 1);
+    toastEl.textContent = '';
+    render();
+  });
+
+  confirmBtn.addEventListener('click', () => {
+    const total = menu.reduce((sum, i) => sum + i.qty * i.price, 0);
+    if(total === 0){
+      toastEl.textContent = 'Add at least one item before confirming.';
+      return;
+    }
+    const ticket = Math.floor(100 + Math.random() * 900);
+    toastEl.textContent = `Order confirmed — ticket #${ticket}. Show this at the counter.`;
+  });
+
+  render();
+</script>
+
+</body>
+</html>
